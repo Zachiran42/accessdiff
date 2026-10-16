@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>AccessDiff — Revue des accès</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Aller à l’espace de travail</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="AccessDiff, accueil"><span class="brand-mark" aria-hidden="true">a<span>↗</span></span>Access<span>Diff</span></a>
+    <span class="topbar-label">REVUE DES ACCÈS</span>
+    <span class="local-badge"><span aria-hidden="true">◉</span> Traitement local</span>
+  </header>
+
+  <main id="workspace">
+    <section class="page-intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">COMPRENDRE AVANT D’AJUSTER</p><h1 id="page-title">Chaque accès a une explication.</h1><p class="intro-copy">Comparez les droits effectifs, puis confrontez-les aux besoins métier.</p></div>
+      <div class="model-tag"><span aria-hidden="true">↳</span><span>Modèle de cette version<strong>Accès en lecture</strong></span></div>
+    </section>
+
+    <section class="import-section" aria-labelledby="import-title">
+      <div class="section-top"><div class="section-title"><span class="step-number">01</span><h2 id="import-title">Les fichiers de votre revue</h2></div><button id="example-button" class="button secondary" type="button"><span aria-hidden="true">↗</span> Charger l’exemple</button></div>
+      <div class="input-grid">
+        <article class="input-block" id="before-block">
+          <div class="input-heading"><h3><span class="input-order">A</span> Avant</h3><span class="file-kind">INSTANTANÉ</span></div>
+          <p class="input-description">La situation de départ.</p>
+          <p class="file-name" id="before-name">Aucun fichier sélectionné</p>
+          <div class="input-footer"><label class="file-picker"><input id="before-file" type="file" accept=".json,application/json" aria-label="Choisir le fichier Avant"><span id="before-action">Choisir un fichier</span><span aria-hidden="true">↑</span></label><span id="before-status" class="input-status">À charger</span></div>
+          <p id="before-error" class="input-error" hidden></p>
+        </article>
+        <article class="input-block" id="after-block">
+          <div class="input-heading"><h3><span class="input-order">B</span> Après</h3><span class="file-kind">INSTANTANÉ</span></div>
+          <p class="input-description">La situation à examiner.</p>
+          <p class="file-name" id="after-name">Aucun fichier sélectionné</p>
+          <div class="input-footer"><label class="file-picker"><input id="after-file" type="file" accept=".json,application/json" aria-label="Choisir le fichier Après"><span id="after-action">Choisir un fichier</span><span aria-hidden="true">↑</span></label><span id="after-status" class="input-status">À charger</span></div>
+          <p id="after-error" class="input-error" hidden></p>
+        </article>
+        <article class="input-block reference-input" id="reference-block">
+          <div class="input-heading"><h3><span class="input-order">R</span> Référence métier</h3><span class="optional-tag">FACULTATIVE</span></div>
+          <p class="input-description">La liste complète des droits nécessaires pour le périmètre Après.</p>
+          <p class="file-name" id="reference-name">Aucune référence fournie</p>
+          <div class="input-footer"><label class="file-picker"><input id="reference-file" type="file" accept=".json,application/json" aria-label="Choisir la référence métier" aria-describedby="reference-guidance"><span id="reference-action">Choisir un fichier</span><span aria-hidden="true">↑</span></label><button id="remove-reference" class="text-button" type="button" disabled>Retirer</button><span id="reference-status" class="input-status">Non évalué</span></div>
+          <p id="reference-error" class="input-error" hidden></p>
+        </article>
+      </div>
+      <p id="reference-guidance" class="reference-guidance"><strong>Interpréter la référence métier.</strong> Tout accès absent de cette liste sera considéré comme non requis. La validation du fichier ne confirme pas l’exactitude des besoins métier.</p>
+      <div class="import-bottom"><p><span aria-hidden="true">⌁</span> Vos fichiers restent dans cette page. Un rechargement efface la session.<br><span class="format-note">Format JSON documenté · 256 Kio par fichier · <a href="./docs/input-format.md" id="format-link">Voir le format</a></span></p><button id="analyze-button" class="button primary" type="button" disabled>Analyser les accès <span aria-hidden="true">→</span></button></div>
+      <div id="status-message" class="status-message" role="status" aria-live="polite">Commencez avec l’exemple ou chargez vos deux instantanés.</div>
+    </section>
+
+    <section class="review-section" aria-labelledby="review-title">
+      <div class="section-top review-top"><div class="section-title"><span class="step-number">02</span><h2 id="review-title">La revue des accès</h2></div><div class="review-actions"><button id="open-simulation" class="button secondary" type="button" disabled>Tester un retrait <span aria-hidden="true">↳</span></button><button id="export-button" class="button secondary" type="button" disabled><span aria-hidden="true">↓</span> Exporter le rapport</button></div></div>
+      <div class="review-workspace">
+        <div class="results-pane">
+          <div class="view-controls" role="group" aria-label="Vue des résultats"><button type="button" id="changes-view" class="view-button" aria-pressed="true">Évolution des accès<span id="changes-tab-count" class="tab-count" hidden></span></button><button type="button" id="reference-view" class="view-button" aria-pressed="false">Écarts métier<span id="reference-tab-count" class="tab-count" hidden></span></button></div>
+          <div id="results-summary" class="results-summary"></div>
+          <div id="results-empty" class="empty-state"><span class="empty-symbol" aria-hidden="true">⇄</span><h3>Votre comparaison commence ici</h3><p>Chargez les instantanés Avant et Après, puis lancez l’analyse pour voir les changements réels d’accès.</p></div>
+          <div id="results-columns" class="result-columns" aria-hidden="true" hidden><span>PERSONNE / RESSOURCE</span><span>CONSTAT</span></div>
+          <ul id="results-list" class="results-list" aria-label="Résultats de la revue"></ul>
+          <p id="results-note" class="results-note" hidden></p>
+        </div>
+        <aside class="explanation-pane" aria-labelledby="explanation-title">
+          <div class="explanation-top"><span class="eyebrow">PREUVE & CONTEXTE</span><h2 id="explanation-title">Comprendre un accès</h2></div>
+          <div id="explanation-content" class="explanation-content"><div class="explanation-placeholder"><span aria-hidden="true">↳</span><p>Sélectionnez un résultat pour suivre son chemin d’accès et voir les relations qui ont changé.</p></div></div>
+        </aside>
+      </div>
+    </section>
+    <section id="simulation-section" class="simulation-section" aria-labelledby="simulation-title" hidden>
+      <div class="section-top review-top"><div class="section-title"><span class="step-number">03</span><h2 id="simulation-title">Tester avant de décider</h2></div><span class="simulation-tag">SIMULATION LOCALE</span></div>
+      <div class="simulation-panel">
+        <div class="simulation-intro"><h3>Que se passe-t-il si je retire cette relation ?</h3><p>Chaque test repart de l’instantané Après. Vos fichiers et la revue initiale restent inchangés.</p></div>
+        <div class="simulation-controls">
+          <div class="relation-picker"><label for="simulation-relation">Relation présente dans Après</label><select id="simulation-relation" aria-describedby="simulation-guidance"><option value="">Choisir une relation à tester</option></select><p id="simulation-guidance">Une appartenance à un groupe ou une autorisation de lecture. Un seul retrait par scénario.</p></div>
+          <button id="simulate-button" class="button primary" type="button" disabled>Tester le retrait <span aria-hidden="true">→</span></button>
+          <button id="reset-simulation" class="text-button" type="button" disabled>Annuler la simulation</button>
+        </div>
+        <p id="simulation-status" class="simulation-status" role="status" aria-live="polite">Choisissez une relation pour examiner les conséquences de son retrait.</p>
+        <div id="simulation-output" hidden>
+          <div class="scenario-heading"><div><p class="eyebrow">APRÈS COURANT → SCÉNARIO</p><h3 id="simulation-relation-title" tabindex="-1"></h3><p id="simulation-relation-ids" class="scenario-ids"></p></div><span class="simulation-tag">RETRAIT FICTIF</span></div>
+          <div id="simulation-summary" class="simulation-summary"></div>
+          <p id="simulation-reference-note" class="simulation-reference-note"></p>
+          <div class="simulation-workspace">
+            <div class="results-pane"><div class="simulation-list-heading"><h3>Conséquences sur les accès</h3><p>Uniquement les accès touchés par cette relation.</p></div><ul id="simulation-list" class="results-list" aria-label="Conséquences du retrait simulé"></ul><p id="simulation-empty" class="results-note" hidden></p><details id="simulation-existing" class="existing-findings" hidden><summary id="simulation-existing-title"></summary><ul id="simulation-existing-list"></ul></details></div>
+            <aside class="explanation-pane" aria-labelledby="simulation-detail-title"><div class="explanation-top"><span class="eyebrow">EFFET DU RETRAIT</span><h3 id="simulation-detail-title">Comprendre la conséquence</h3></div><div id="simulation-detail" class="explanation-content"></div></aside>
+          </div>
+          <p class="simulation-note">Conséquences calculées dans le modèle en lecture et selon la référence fournie. Aucun droit réel n’est modifié. Ce test ne constitue pas une approbation du retrait.</p>
+        </div>
+      </div>
+    </section>
+    <footer class="page-footer"><p><strong>Un périmètre explicite.</strong> Lecture, droits positifs et groupes imbriqués. Les besoins métier sont déclarés par l’auteur de la référence.</p><p>Analyse des fichiers fournis · Sans modification des droits · Sans verdict de conformité</p></footer>
+  </main>
+</body>
+</html>

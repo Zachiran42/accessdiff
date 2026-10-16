@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "coverage": "all-after-pairs",
+  "peopleIds": ["p:clara", "p:julien", "p:nadia"],
+  "resourceIds": ["r:plan-it", "r:contrats"],
+  "requiredRead": [
+    { "personId": "p:nadia", "resourceId": "r:plan-it" },
+    { "personId": "p:clara", "resourceId": "r:plan-it" },
+    { "personId": "p:julien", "resourceId": "r:contrats" }
+  ]
+}

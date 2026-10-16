@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A compact, offline reference to AccessDiff's single-removal simulation and its source code.">
+  <title>AccessDiff · App map</title>
+  <style>
+    :root { color-scheme: light; --background:#f4f7f8; --surface:#fff; --text:#172d3b; --muted:#52646f; --blue:#24485b; --accent:#277e78; --line:#d8e2e7; --soft:#edf3f5; font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:var(--background); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-size:15px; line-height:1.55; }
+    main { max-width:1120px; margin:auto; padding:36px 28px 32px; }
+    a { color:var(--blue); text-underline-offset:3px; overflow-wrap:anywhere; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+    .skip { position:absolute; top:-80px; left:20px; padding:10px 16px; background:white; border:2px solid var(--accent); z-index:1; }
+    .skip:focus { top:12px; }
+    h1,h2,h3,p { margin:0; }
+    h1 { font-size:clamp(28px,4vw,38px); line-height:1.2; letter-spacing:-1px; font-weight:650; margin:6px 0 10px; }
+    h2 { font-size:21px; line-height:1.3; font-weight:650; margin-bottom:12px; }
+    h3 { font-size:16px; font-weight:650; margin-bottom:5px; }
+    p + p { margin-top:9px; }
+    .eyebrow { color:var(--accent); font-size:12px; font-weight:750; text-transform:uppercase; letter-spacing:1.6px; }
+    .muted, .intro { color:var(--muted); }
+    .intro { max-width:85ch; }
+    code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; font-size:.88em; overflow-wrap:anywhere; }
+    p code, li code, dd code { background:var(--soft); border-radius:3px; padding:2px 4px; }
+    nav { display:flex; flex-wrap:wrap; gap:8px 22px; font-size:13px; margin:20px 0 24px; }
+    section { scroll-margin-top:20px; margin-top:24px; }
+    .pieces { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid var(--line); border-radius:10px; background:var(--surface); overflow:hidden; margin-top:18px; }
+    .piece { padding:16px 18px; min-width:0; }
+    .piece + .piece { border-left:1px solid var(--line); }
+    .piece p { color:var(--muted); font-size:13px; }
+    .scope { font-size:13px; color:var(--muted); margin-top:12px; }
+    .route-note { color:var(--muted); font-size:13px; margin-bottom:15px; }
+    figure { margin:0 0 18px; padding:18px; border:1px solid #cadeda; border-radius:10px; background:#edf5f3; }
+    .flow { display:flex; align-items:stretch; gap:9px; }
+    .flow-box { flex:1; min-width:0; padding:12px; border:1px solid var(--line); border-radius:7px; background:var(--surface); }
+    .flow-box strong { display:block; font-size:13px; margin:3px 0; }
+    .flow-box code { display:block; font-size:11px; color:var(--muted); }
+    .flow-kind { color:var(--accent); font-size:10px; text-transform:uppercase; letter-spacing:.7px; font-weight:750; }
+    .arrow { align-self:center; color:var(--accent); font-size:20px; }
+    figcaption { margin-top:12px; color:#425f5c; font-size:12px; }
+    .route { list-style:none; padding:0; margin:0; counter-reset:route; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .route li { counter-increment:route; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:16px; min-width:0; }
+    .route h3::before { content:counter(route,decimal-leading-zero) " · "; color:var(--accent); font-size:13px; }
+    .route p { font-size:13px; color:var(--muted); }
+    .anchor { display:block; margin:8px 0; font-size:12px; }
+    .practice { border-left:3px solid var(--accent); background:var(--surface); padding:18px 21px; border-radius:0 8px 8px 0; }
+    .practice p { font-size:14px; }
+    details { margin-top:12px; font-size:13px; color:var(--muted); }
+    summary { cursor:pointer; color:var(--blue); font-weight:600; }
+    details p { margin-top:9px; }
+    .pointers { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:0; }
+    .pointers div { padding:14px 17px; border:1px solid var(--line); border-radius:8px; background:var(--surface); min-width:0; }
+    dt { font-weight:650; font-size:14px; margin-bottom:5px; }
+    dd { margin:0; font-size:13px; color:var(--muted); }
+    .run { display:grid; grid-template-columns:1fr 1fr; gap:20px; border-top:1px solid var(--line); padding-top:22px; }
+    .run p { font-size:13px; }
+    pre { background:var(--blue); color:#fff; padding:12px 15px; border-radius:6px; margin:10px 0; overflow-x:auto; }
+    pre code { font-size:13px; }
+    footer { border-top:1px solid var(--line); margin-top:24px; padding-top:14px; font-size:12px; color:var(--muted); }
+    @media (max-width:850px) { .flow { flex-direction:column; gap:6px; } .arrow { transform:rotate(90deg); } .route { grid-template-columns:1fr; } }
+    @media (max-width:650px) { main { padding:26px 18px; } .pieces,.pointers,.run { grid-template-columns:1fr; } .piece + .piece { border-left:0; border-top:1px solid var(--line); } }
+    @media print { :root { background:#fff; } main { max-width:none; padding:0; } nav,.skip { display:none; } section,figure,.route li,.pointers div { break-inside:avoid; } a { color:inherit; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#route">Skip to the reference route</a>
+  <main id="main">
+    <header>
+      <p class="eyebrow">AccessDiff · Code reference</p>
+      <h1>From a removal test to its evidence</h1>
+      <p class="intro">AccessDiff compares effective read access in two supplied snapshots. An optional, complete business reference identifies access that is not required and required access that is missing. A temporary single-removal scenario shows what would change before any real permission is edited.</p>
+      <nav aria-label="App map sections">
+        <a href="#route">Follow one action</a>
+        <a href="#practice">A practice to reuse</a>
+        <a href="#changes">Where to make a change</a>
+        <a href="#run">Run and reopen</a>
+      </nav>
+      <div class="pieces" aria-label="The main pieces">
+        <div class="piece"><h3>Validated inputs</h3><p>Before and After JSON describe people, groups and resources. The optional reference explicitly declares needs across the complete After scope.</p></div>
+        <div class="piece"><h3>Deterministic calculations</h3><p>The graph engine computes reachable access. Reference comparison and a copy with one relation removed produce distinct findings.</p></div>
+        <div class="piece"><h3>Current evidence</h3><p>The page session owns input and result freshness. The interface explains findings; a downloaded HTML report preserves the current evidence.</p></div>
+      </div>
+      <p class="scope"><strong>Model:</strong> positive <code>read</code> grants to flat resources, directly or through nested groups. Imported data stays in browser page memory; a reload clears it. No runtime AI, external API or persistent application storage. A downloaded report remains a separate local file.</p>
+    </header>
+
+    <section id="route" aria-labelledby="route-title">
+      <h2 id="route-title">Follow one action</h2>
+      <p class="route-note"><strong>Reference route:</strong> a source guide, not a record of a completed user walkthrough. Paths shown below are relative to the repository root; file links are relative to this map.</p>
+      <figure>
+        <div class="flow" aria-label="Test removal flows through the interface, session and simulation engine to separate scenario evidence.">
+          <div class="flow-box"><span class="flow-kind">Action</span><strong>Tester le retrait</strong><code>Selected After relation</code></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="flow-box"><span class="flow-kind">01 · Interface</span><strong>Read the relation ID</strong><code>src/app.js<br>simulate-button handler</code></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="flow-box"><span class="flow-kind">02 · Session</span><strong>Use current inputs</strong><code>src/session.js<br>simulateRemoval()</code></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="flow-box"><span class="flow-kind">03 · Engine</span><strong>Copy, remove, compare</strong><code>src/simulation.js<br>simulateRemoval()</code></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="flow-box"><span class="flow-kind">Visible result</span><strong>After → Scenario</strong><code>Losses, declared needs,<br>surviving alternative paths</code></div>
+        </div>
+        <figcaption>The result returns through the session subscription to <code>renderSimulation</code> in <code>src/app.js</code>. The original Before → After comparison remains separate.</figcaption>
+      </figure>
+      <ol class="route">
+        <li>
+          <h3>Start at the button</h3>
+          <a class="anchor" href="../src/app.js"><code>src/app.js</code></a>
+          <p>Search for <code>$('simulate-button')</code>. Its click handler passes the selected relation ID to the session. On success, it scrolls to and focuses the scenario heading.</p>
+          <p>Also find <code>renderSimulation</code>: this turns the returned losses, business-impact counts and retained paths into the separate panel.</p>
+        </li>
+        <li>
+          <h3>Check who owns the state</h3>
+          <a class="anchor" href="../src/session.js"><code>src/session.js</code> · <code>createSession</code></a>
+          <p>Find the nested <code>simulateRemoval</code>. It clears the old scenario, requires a current analysis, then calls <code>calculateRemoval</code> with the original validated After input and reference.</p>
+          <p><code>getExportResult</code> exposes the current base result plus scenario; <code>resetSimulation</code> restores the original-only export.</p>
+        </li>
+        <li>
+          <h3>Follow the calculation</h3>
+          <a class="anchor" href="../src/simulation.js"><code>src/simulation.js</code> · <code>simulateRemoval</code></a>
+          <p><code>copyWithoutRelation</code> creates a fresh scenario. <code>analyzeAccess</code> compares current After with that copy. Retained pairs must have used the removed relation and still have another granting path.</p>
+          <p>The engine returns findings and separate newly/already missing need counts. Rendering consumes this evidence rather than editing the supplied files.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="practice" class="practice" aria-labelledby="practice-title">
+      <h2 id="practice-title">A practice to reuse</h2>
+      <p><strong>Make a requirement observable, then protect it with a test.</strong> A removed relationship does not necessarily mean lost access: another route may still grant the same right. A concrete example makes that distinction checkable.</p>
+      <p>The <a href="spec.md">technical specification</a>, under <strong>Components → Single-Relationship Removal Simulation</strong>, requires a valid surviving route for affected retained access. The test <code>removing a direct grant preserves other rights and reports a retained indirect route</code> in <a href="../tests/simulation.test.js"><code>tests/simulation.test.js</code></a> removes a direct person → resource grant and expects <strong>zero losses, one affected retained pair</strong>, and a surviving person → group → resource path.</p>
+      <p>For another project, write the expected observable difference first, including what must stay unchanged. Link that criterion to a small example, the code that enforces it, and a browser check of the same behavior.</p>
+      <details>
+        <summary>Related evidence: successive removals never accumulate</summary>
+        <p>The specification’s <strong>Import Session and Freshness</strong> section requires every test to start from unchanged After. <a href="../tests/session.test.js"><code>tests/session.test.js</code></a> checks this with <code>a second simulation removes only its selected relation from original After, never the first removal</code>: removing the second of two direct grants produces exactly one loss for the second resource and leaves After unchanged. In <a href="../src/access.js"><code>src/access.js</code></a>, <code>computeAccess</code> supplies the effective-access calculation used by both scenarios.</p>
+      </details>
+    </section>
+
+    <section id="changes" aria-labelledby="changes-title">
+      <h2 id="changes-title">To change this, start here</h2>
+      <dl class="pointers">
+        <div><dt>Scenario wording or layout</dt><dd><a href="../src/app.js"><code>src/app.js</code></a> → <code>renderSimulation</code> and <code>renderSimulationDetail</code>; <a href="../styles.css"><code>styles.css</code></a> controls visual styles. Keep the original comparison and scenario labels distinct.</dd></div>
+        <div><dt>Accepted input format</dt><dd><a href="../src/snapshot.js"><code>src/snapshot.js</code></a> → <code>parseSnapshot</code> / <code>validateSnapshot</code>. Update the matching contract in <a href="../docs/input-format.md"><code>docs/input-format.md</code></a> when changing supported data.</dd></div>
+        <div><dt>Access or business-need calculations</dt><dd><a href="../src/access.js"><code>src/access.js</code></a> → <code>computeAccess</code>; <a href="../src/policy.js"><code>src/policy.js</code></a> → <code>evaluateReference</code>. Access reachability and declared necessity are separate decisions; verify both with existing tests.</dd></div>
+        <div><dt>Downloaded report content</dt><dd><a href="../src/report.js"><code>src/report.js</code></a> → <code>createReport</code>; <a href="../tests/report.test.js"><code>tests/report.test.js</code></a> checks evidence and escaping. The report must reflect the current session result and distinguish its two comparisons.</dd></div>
+      </dl>
+    </section>
+
+    <section id="run" class="run" aria-labelledby="run-title">
+      <div>
+        <h2 id="run-title">Run the app again</h2>
+        <p>From the repository root, with Node.js 24 installed:</p>
+        <pre><code>npm start</code></pre>
+        <p>Open <a href="http://127.0.0.1:5174/">http://127.0.0.1:5174/</a>. Keep its terminal open; stop it with Ctrl+C. No package installation is required. The app uses local HTTP for its modules and examples.</p>
+      </div>
+      <div>
+        <h2>Verify and reopen this map</h2>
+        <pre><code>npm test</code></pre>
+        <p>The built-in Node test runner checks the calculations, validation, session freshness, report and local server. Tests use no external service.</p>
+        <p>Open <code>devpost/app-map.html</code> directly in a browser to return here. This map works offline with scripts disabled; the app’s static server does not serve planning files. See <a href="../README.md">README.md</a> for the complete run instructions.</p>
+      </div>
+    </section>
+    <footer>
+      <p>Source snapshot: <code>e3f8d52</code> · <code>codex/accessdiff</code> · 11 October 2026. This map describes that code commit and can drift as the source changes.</p>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "people": [
+    { "id": "p:clara", "name": "Clara" },
+    { "id": "p:julien", "name": "Julien" },
+    { "id": "p:nadia", "name": "Nadia" }
+  ],
+  "groups": [
+    { "id": "g:support-n1", "name": "Support N1" },
+    { "id": "g:support-n2", "name": "Support N2" },
+    { "id": "g:pilotage-it", "name": "Pilotage IT" }
+  ],
+  "resources": [
+    { "id": "r:plan-it", "name": "Plan de renouvellement IT" },
+    { "id": "r:contrats", "name": "Contrats fournisseurs" }
+  ],
+  "memberships": [
+    { "memberId": "p:nadia", "groupId": "g:pilotage-it" },
+    { "memberId": "p:clara", "groupId": "g:support-n1" },
+    { "memberId": "g:support-n1", "groupId": "g:support-n2" },
+    { "memberId": "g:support-n2", "groupId": "g:pilotage-it" }
+  ],
+  "grants": [
+    { "subjectId": "g:pilotage-it", "resourceId": "r:plan-it", "permission": "read" },
+    { "subjectId": "g:support-n2", "resourceId": "r:contrats", "permission": "read" }
+  ]
+}
