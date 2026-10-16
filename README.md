@@ -85,6 +85,8 @@ Browser review should cover the bundled load → compare → explain → referen
 
 ## Development and submission
 
+This publication snapshot has its own Git history. The original local checkpoint identifiers retained in the app map and build checklist describe development provenance; those local commits are not included here. Application source, tests, fictional examples and approved planning documents are preserved.
+
 AccessDiff is being developed with a coding agent and the Devpost Learn Skill Pack. Its runtime calculations are deterministic JavaScript. The planning artifacts are [scope](devpost/scope.md), [product requirements](devpost/prd.md) and [technical specification](devpost/spec.md); the [build checklist](devpost/checklist.md) records implementation review. The private learner profile is excluded from Git.
 
 The standalone [app map](devpost/app-map.html) connects the removal button, session state and calculation to their actual source files and tests. Open it directly from the local checkout for a compact reference; the application server deliberately does not serve planning artifacts. The map requires no script or external asset.
